@@ -1,162 +1,299 @@
-// ===== MATRIX RAIN EFFECT =====
+// ===== ENHANCED DEMONIC MATRIX RAIN EFFECT =====
 const canvas = document.getElementById('matrixCanvas');
 const ctx = canvas.getContext('2d');
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// Set canvas size
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    initMatrix();
+}
+resizeCanvas();
 
-const chars = 'DEVILPHISHER悪魔ピウズスカイHELLGATE0123456789$€¥£¢†‡§¶®©℗℠™';
-const fontSize = 14;
-const columns = canvas.width / fontSize;
-const drops = [];
+// Enhanced character set with demonic symbols
+const chars = 'DEVILPHISHER悪魔ピウズスカイHELLGATE🔥💀👿👹👺☠️⚰️🩸🔪🖤₮฿€$¥£¢†‡§¶®©℗℠™0123456789';
+const fontSize = 16;
+let columns = Math.floor(canvas.width / fontSize);
+let drops = [];
 
-for(let i = 0; i < columns; i++) {
-    drops[i] = Math.random() * canvas.height;
+// Matrix colors (cycling)
+const matrixColors = ['#ff0000', '#8b0000', '#dc143c', '#b22222', '#8b0000'];
+let currentColorIndex = 0;
+
+// Initialize matrix
+function initMatrix() {
+    columns = Math.floor(canvas.width / fontSize);
+    drops = [];
+    
+    for(let i = 0; i < columns; i++) {
+        drops[i] = {
+            y: Math.random() * canvas.height,
+            speed: Math.random() * 2 + 1,
+            char: chars[Math.floor(Math.random() * chars.length)],
+            brightness: Math.random() * 0.5 + 0.5,
+            fontSize: fontSize + Math.random() * 4 - 2
+        };
+    }
 }
 
+// Enhanced draw function
 function drawMatrix() {
+    // Darken canvas with fade effect
     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    ctx.fillStyle = '#ff0000';
-    ctx.font = `${fontSize}px monospace`;
+    // Cycle through colors every 100 frames
+    if (Math.floor(Date.now() / 100) % 100 === 0) {
+        currentColorIndex = (currentColorIndex + 1) % matrixColors.length;
+    }
     
+    const currentColor = matrixColors[currentColorIndex];
+    
+    // Draw matrix characters
     for(let i = 0; i < drops.length; i++) {
-        const char = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+        const drop = drops[i];
         
-        if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-            drops[i] = 0;
+        // Randomly change character sometimes
+        if (Math.random() > 0.97) {
+            drop.char = chars[Math.floor(Math.random() * chars.length)];
         }
-        drops[i]++;
+        
+        // Set color with brightness variation
+        const brightness = Math.sin(Date.now() / 1000 + i) * 0.3 + 0.7;
+        ctx.fillStyle = adjustColorBrightness(currentColor, brightness);
+        
+        // Draw character with shadow
+        ctx.font = `${drop.fontSize}px "Courier New", monospace`;
+        
+        // Character shadow for depth
+        ctx.shadowColor = currentColor;
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+        
+        // Draw main character
+        ctx.fillText(drop.char, i * fontSize, drop.y);
+        
+        // Draw trailing character (faint)
+        ctx.fillStyle = adjustColorBrightness(currentColor, brightness * 0.3);
+        ctx.fillText(drop.char, i * fontSize, drop.y - fontSize);
+        
+        // Reset shadow
+        ctx.shadowBlur = 0;
+        
+        // Move drop down
+        drop.y += drop.speed;
+        
+        // Reset if off screen
+        if (drop.y > canvas.height + fontSize) {
+            drop.y = -fontSize;
+            drop.speed = Math.random() * 2 + 1;
+            drop.char = chars[Math.floor(Math.random() * chars.length)];
+            drop.brightness = Math.random() * 0.5 + 0.5;
+        }
+    }
+    
+    // Add occasional "glitch" effect
+    if (Math.random() > 0.995) {
+        matrixGlitch();
     }
 }
 
-const matrixInterval = setInterval(drawMatrix, 35);
+// Color brightness adjustment
+function adjustColorBrightness(color, brightness) {
+    const hex = color.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    const newR = Math.min(255, Math.floor(r * brightness));
+    const newG = Math.min(255, Math.floor(g * brightness));
+    const newB = Math.min(255, Math.floor(b * brightness));
+    
+    return `rgb(${newR}, ${newG}, ${newB})`;
+}
 
-// ===== LOADING SEQUENCE =====
-window.addEventListener('load', function() {
-    const loadingScreen = document.getElementById('loadingScreen');
-    const loginContainer = document.getElementById('loginContainer');
-    const terminal = document.getElementById('terminal');
+// Glitch effect
+function matrixGlitch() {
+    const glitchDuration = 100; // ms
+    const startTime = Date.now();
     
-    // Add more terminal lines dynamically
-    setTimeout(() => {
-        const newLine = document.createElement('div');
-        newLine.className = 'terminal-line';
-        newLine.innerHTML = '<span class="prompt">root@devil-phisher:~#</span> <span class="command">load_admin_panel</span>';
-        terminal.appendChild(newLine);
+    function applyGlitch() {
+        const elapsed = Date.now() - startTime;
+        if (elapsed > glitchDuration) return;
         
-        setTimeout(() => {
-            const responseLine = document.createElement('div');
-            responseLine.className = 'terminal-line response';
-            responseLine.textContent = '> Admin panel ready for authentication';
-            terminal.appendChild(responseLine);
-            terminal.scrollTop = terminal.scrollHeight;
-        }, 300);
-    }, 2500);
-    
-    // Transition to login after 4 seconds
-    setTimeout(() => {
-        loadingScreen.style.opacity = '0';
+        // Save current state
+        ctx.save();
         
-        setTimeout(() => {
-            loadingScreen.style.display = 'none';
-            loginContainer.style.display = 'flex';
-            
-            // Add flames effect
-            const flames = document.createElement('div');
-            flames.className = 'flames';
-            document.body.appendChild(flames);
-        }, 500);
-    }, 4000);
-});
-
-// ===== LOGIN HANDLER =====
-document.getElementById('loginForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const loginBtn = document.querySelector('.login-btn');
-    const loginBox = document.querySelector('.login-box');
-    
-    // Original credentials
-    const validCredentials = [
-        { user: 'piwzsky', pass: 'piwzsky30' },
-        { user: 'admin', pass: 'devil666' },
-        { user: 'root', pass: 'toor' }
-    ];
-    
-    // Check credentials
-    const isValid = validCredentials.some(cred => 
-        cred.user === username && cred.pass === password
-    );
-    
-    if (isValid) {
-        // Success
-        loginBtn.innerHTML = '<i class="fas fa-check"></i> ACCESS GRANTED';
-        loginBtn.style.background = 'linear-gradient(45deg, #00ff00, #008000)';
+        // Apply random distortion
+        const distortionX = Math.random() * 20 - 10;
+        const distortionY = Math.random() * 20 - 10;
+        ctx.translate(distortionX, distortionY);
         
-        // Save session
-        localStorage.setItem('devil_auth', 'true');
-        localStorage.setItem('devil_user', username);
+        // Draw glitched frame
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Redirect to dashboard
-        setTimeout(() => {
-            window.location.href = '/admin/dashboard.html';
-        }, 1000);
-        
-    } else {
-        // Failed login
-        loginBox.classList.add('shake');
-        loginBtn.innerHTML = '<i class="fas fa-times"></i> ACCESS DENIED';
-        loginBtn.style.background = 'linear-gradient(45deg, #ff0000, #8b0000)';
-        
-        // Reset after animation
-        setTimeout(() => {
-            loginBox.classList.remove('shake');
-            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> ENTER HELL GATE';
-            loginBtn.style.background = 'linear-gradient(45deg, var(--dark-red), var(--blood-red))';
-            
-            // Clear inputs
-            document.getElementById('password').value = '';
-            
-            // Show warning
-            alert('🚨 INTRUDER DETECTED!\nUnauthorized access attempt logged!');
-        }, 500);
+        // Restore and continue
+        ctx.restore();
+        requestAnimationFrame(applyGlitch);
     }
-});
+    
+    applyGlitch();
+}
 
-// ===== WINDOW RESIZE HANDLER =====
+// Special effects - occasional blood drip
+function createBloodDrip() {
+    if (Math.random() > 0.99) {
+        const x = Math.random() * canvas.width;
+        const drip = {
+            x: x,
+            y: 0,
+            size: Math.random() * 3 + 1,
+            speed: Math.random() * 5 + 2,
+            life: 100
+        };
+        
+        bloodDrips.push(drip);
+    }
+}
+
+let bloodDrips = [];
+function drawBloodDrips() {
+    for(let i = bloodDrips.length - 1; i >= 0; i--) {
+        const drip = bloodDrips[i];
+        
+        // Draw drip
+        ctx.fillStyle = '#8b0000';
+        ctx.beginPath();
+        ctx.arc(drip.x, drip.y, drip.size, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw trail
+        ctx.fillStyle = 'rgba(139, 0, 0, 0.3)';
+        ctx.beginPath();
+        ctx.arc(drip.x, drip.y - 5, drip.size * 0.7, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Update position
+        drip.y += drip.speed;
+        drip.life--;
+        
+        // Remove if dead or off screen
+        if (drip.life <= 0 || drip.y > canvas.height) {
+            bloodDrips.splice(i, 1);
+        }
+    }
+}
+
+// Enhanced draw loop
+function enhancedDrawLoop() {
+    drawMatrix();
+    createBloodDrip();
+    drawBloodDrips();
+    requestAnimationFrame(enhancedDrawLoop);
+}
+
+// Start matrix effect
+let matrixInterval = setInterval(() => {
+    requestAnimationFrame(enhancedDrawLoop);
+}, 35);
+
+// Handle window resize
 window.addEventListener('resize', function() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    clearInterval(matrixInterval);
+    resizeCanvas();
+    matrixInterval = setInterval(() => {
+        requestAnimationFrame(enhancedDrawLoop);
+    }, 35);
 });
 
-// ===== KEYBOARD SHORTCUTS =====
-document.addEventListener('keydown', function(e) {
-    // Ctrl+Alt+D for quick access (dev mode)
-    if (e.ctrlKey && e.altKey && e.key === 'd') {
-        document.getElementById('username').value = 'piwzsky';
-        document.getElementById('password').value = 'piwzsky30';
+// Performance optimization
+let lastTime = 0;
+const fps = 30;
+const interval = 1000 / fps;
+
+function optimizedDrawLoop(timestamp) {
+    if (timestamp - lastTime >= interval) {
+        drawMatrix();
+        createBloodDrip();
+        drawBloodDrips();
+        lastTime = timestamp;
     }
+    requestAnimationFrame(optimizedDrawLoop);
+}
+
+// Uncomment for optimized version:
+// requestAnimationFrame(optimizedDrawLoop);
+
+// Interactive effects
+canvas.addEventListener('mousemove', function(e) {
+    // Create ripple effect near mouse
+    const x = e.clientX;
+    const y = e.clientY;
     
-    // Escape key to clear form
-    if (e.key === 'Escape') {
-        document.getElementById('username').value = '';
-        document.getElementById('password').value = '';
+    // Find nearest columns
+    const columnIndex = Math.floor(x / fontSize);
+    const affectRange = 5;
+    
+    for(let i = Math.max(0, columnIndex - affectRange); 
+        i < Math.min(columns, columnIndex + affectRange); 
+        i++) {
+        
+        // Speed up drops near cursor
+        if (drops[i]) {
+            const distance = Math.abs(i - columnIndex);
+            const influence = 1 - (distance / affectRange);
+            
+            drops[i].speed += influence * 2;
+            drops[i].brightness = 1;
+        }
     }
 });
 
-// ===== CHECK FOR SESSION =====
-function checkSession() {
-    const auth = localStorage.getItem('devil_auth');
-    if (auth === 'true') {
-        // Already logged in, redirect to dashboard
-        window.location.href = '/admin/dashboard.html';
+// Add keyboard control for effect intensity
+let effectIntensity = 1;
+document.addEventListener('keydown', function(e) {
+    if (e.key === '+') {
+        effectIntensity = Math.min(3, effectIntensity + 0.1);
+        updateEffectIntensity();
+    } else if (e.key === '-') {
+        effectIntensity = Math.max(0.5, effectIntensity - 0.1);
+        updateEffectIntensity();
+    } else if (e.key === '0') {
+        effectIntensity = 1;
+        updateEffectIntensity();
+    }
+});
+
+function updateEffectIntensity() {
+    for(let i = 0; i < drops.length; i++) {
+        drops[i].speed = (Math.random() * 2 + 1) * effectIntensity;
     }
 }
 
-// Run session check
-checkSession();
+// Add toggle for matrix effect
+let matrixEnabled = true;
+function toggleMatrix() {
+    matrixEnabled = !matrixEnabled;
+    if (matrixEnabled) {
+        matrixInterval = setInterval(() => {
+            requestAnimationFrame(enhancedDrawLoop);
+        }, 35);
+    } else {
+        clearInterval(matrixInterval);
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+}
+
+// Expose control to console for debugging
+window.matrixController = {
+    toggle: toggleMatrix,
+    setIntensity: (val) => {
+        effectIntensity = val;
+        updateEffectIntensity();
+    },
+    glitch: matrixGlitch,
+    reset: initMatrix
+};
