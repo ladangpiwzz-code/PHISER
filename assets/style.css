@@ -1,0 +1,487 @@
+/* ===== MAIN STYLES ===== */
+:root {
+    --blood-red: #ff0000;
+    --dark-red: #8b0000;
+    --hell-orange: #ff4500;
+    --demon-purple: #8a2be2;
+    --dark-bg: #0a0a0a;
+    --darker-bg: #050505;
+    --terminal-green: #00ff00;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', 'Monaco', monospace;
+}
+
+body {
+    background: var(--dark-bg);
+    color: #fff;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* ===== MATRIX BACKGROUND ===== */
+#matrixCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.1;
+}
+
+/* ===== LOADING SCREEN ===== */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--darker-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+
+.skull {
+    font-size: 5rem;
+    margin-bottom: 20px;
+    color: var(--blood-red);
+    animation: float 3s ease-in-out infinite;
+    text-shadow: 0 0 20px var(--blood-red);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+.demonic-title {
+    font-size: 4rem;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.demonic-title span {
+    background: linear-gradient(45deg, var(--blood-red), var(--hell-orange), var(--demon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 
+        0 0 10px var(--blood-red),
+        0 0 20px var(--blood-red),
+        0 0 30px var(--blood-red);
+    animation: hellfire 2s infinite alternate;
+}
+
+@keyframes hellfire {
+    0% { 
+        text-shadow: 0 0 10px var(--blood-red),
+                     0 0 20px var(--blood-red);
+    }
+    100% { 
+        text-shadow: 0 0 20px var(--blood-red),
+                     0 0 40px var(--blood-red),
+                     0 0 60px var(--hell-orange);
+    }
+}
+
+.creator {
+    color: var(--dark-red);
+    font-size: 1.2rem;
+    letter-spacing: 3px;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+}
+
+/* ===== HELL LOADER ===== */
+.hell-loader {
+    width: 400px;
+    height: 6px;
+    background: rgba(139, 0, 0, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 30px 0;
+    position: relative;
+    border: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+.hell-progress {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, 
+        var(--dark-red), 
+        var(--blood-red), 
+        var(--hell-orange),
+        var(--blood-red),
+        var(--dark-red));
+    animation: loading 3.5s ease-in-out forwards;
+    box-shadow: 0 0 10px var(--blood-red);
+    position: relative;
+}
+
+.hell-progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent);
+    animation: shimmer 1s infinite;
+}
+
+@keyframes loading {
+    0% { width: 0%; }
+    20% { width: 25%; }
+    40% { width: 50%; }
+    60% { width: 75%; }
+    80% { width: 90%; }
+    100% { width: 100%; }
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* ===== TERMINAL ===== */
+.terminal {
+    background: rgba(20, 0, 0, 0.7);
+    border: 1px solid var(--dark-red);
+    border-radius: 8px;
+    padding: 20px;
+    width: 600px;
+    height: 200px;
+    overflow-y: auto;
+    margin-top: 30px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.terminal-line {
+    margin-bottom: 8px;
+    animation: type 0.1s forwards;
+    opacity: 0;
+}
+
+.terminal-line:nth-child(1) { animation-delay: 0.5s; }
+.terminal-line:nth-child(2) { animation-delay: 1s; }
+.terminal-line:nth-child(3) { animation-delay: 1.5s; }
+.terminal-line:nth-child(4) { animation-delay: 2s; }
+.terminal-line:nth-child(5) { animation-delay: 2.5s; }
+.terminal-line:nth-child(6) { animation-delay: 3s; }
+
+@keyframes type {
+    to { opacity: 1; }
+}
+
+.prompt {
+    color: var(--terminal-green);
+    font-weight: bold;
+}
+
+.command {
+    color: #ffff00;
+}
+
+.response {
+    color: var(--hell-orange);
+}
+
+/* ===== STATUS INDICATORS ===== */
+.status-container {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    animation: statusPulse 1.5s infinite;
+}
+
+.status-1 { 
+    background: var(--blood-red); 
+    animation-delay: 0s;
+    box-shadow: 0 0 10px var(--blood-red);
+}
+
+.status-2 { 
+    background: var(--hell-orange); 
+    animation-delay: 0.3s;
+    box-shadow: 0 0 10px var(--hell-orange);
+}
+
+.status-3 { 
+    background: var(--demon-purple); 
+    animation-delay: 0.6s;
+    box-shadow: 0 0 10px var(--demon-purple);
+}
+
+@keyframes statusPulse {
+    0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.7;
+        transform: scale(1.2);
+    }
+}
+
+/* ===== LOGIN CONTAINER ===== */
+.login-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.97);
+    z-index: 2000;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    background: linear-gradient(145deg, #1a0000, #0a0000);
+    border: 2px solid var(--blood-red);
+    border-radius: 15px;
+    padding: 40px;
+    width: 400px;
+    box-shadow: 
+        0 0 50px rgba(255, 0, 0, 0.3),
+        inset 0 0 20px rgba(139, 0, 0, 0.2);
+    animation: loginAppear 0.5s ease-out;
+}
+
+@keyframes loginAppear {
+    from { 
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid var(--dark-red);
+    padding-bottom: 20px;
+}
+
+.login-header h2 {
+    color: var(--blood-red);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.login-header p {
+    color: #aaa;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+}
+
+/* ===== FORM STYLES ===== */
+.input-group {
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--dark-red);
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.input-group label i {
+    margin-right: 8px;
+    color: var(--hell-orange);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--dark-red);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--blood-red);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+    background: rgba(20, 0, 0, 0.7);
+}
+
+/* ===== LOGIN BUTTON ===== */
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(45deg, var(--dark-red), var(--blood-red));
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-btn i {
+    margin-right: 10px;
+}
+
+.login-btn:hover {
+    background: linear-gradient(45deg, var(--blood-red), var(--hell-orange));
+    box-shadow: 
+        0 0 20px var(--blood-red),
+        0 0 40px rgba(255, 0, 0, 0.3);
+    transform: translateY(-2px);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.login-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to right,
+        transparent 20%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 80%
+    );
+    transform: rotate(30deg);
+    animation: buttonShine 3s infinite linear;
+}
+
+@keyframes buttonShine {
+    0% { transform: translateX(-100%) rotate(30deg); }
+    100% { transform: translateX(100%) rotate(30deg); }
+}
+
+/* ===== LOGIN FOOTER ===== */
+.login-footer {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.warning {
+    background: rgba(139, 0, 0, 0.2);
+    border: 1px solid var(--dark-red);
+    border-radius: 5px;
+    padding: 12px;
+    color: #ff6b6b;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.warning i {
+    color: var(--hell-orange);
+}
+
+/* ===== SHAKE ANIMATION ===== */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+    20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .demonic-title {
+        font-size: 2.5rem;
+        letter-spacing: 5px;
+        text-align: center;
+    }
+    
+    .creator {
+        font-size: 1rem;
+        text-align: center;
+    }
+    
+    .hell-loader {
+        width: 300px;
+    }
+    
+    .terminal {
+        width: 90%;
+        height: 180px;
+        font-size: 0.8rem;
+    }
+    
+    .login-box {
+        width: 90%;
+        padding: 30px 20px;
+    }
+    
+    .status-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+/* ===== FLAMES EFFECT ===== */
+.flames {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to top, 
+        rgba(139, 0, 0, 0.8), 
+        rgba(255, 69, 0, 0.4),
+        transparent);
+    z-index: -1;
+    pointer-events: none;
+}
